@@ -8,11 +8,11 @@ require 'rspec/rails'
 # in ./support/ and its subdirectories.
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each {|f| require f}
 
-require 'spree/core/testing_support/factories'
-require 'spree/core/testing_support/fixtures'
-require 'spree/core/testing_support/capybara_ext'
+require 'spree/testing_support/capybara_ext'
+require 'spree/testing_support/factories'
+require 'spree/testing_support/url_helpers'
 require 'ffaker'
-
+require 'debugger'
 
 RSpec.configure do |config|
   # == Mock Framework
@@ -31,7 +31,7 @@ RSpec.configure do |config|
   # instead of true.
   config.use_transactional_fixtures = true
 
-  config.include Spree::Core::UrlHelpers
+  config.include Spree::TestingSupport::UrlHelpers
   config.include FactoryGirl::Syntax::Methods
-
+  config.include AuthenticationHelpers
 end

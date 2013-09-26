@@ -19,18 +19,18 @@ module Spree
 
       it "creates amount correctly when order.payment_state is paid" do
         create(:line_item, :order => order)
-        payment = create(:payment, :order => order, :amount => 20)
+        payment = create(:payment, :order => order, :amount => 60)
         order.reload
-        expect do
+        expect {
           payment.complete! # Payment.update_order is called in spree_core/payment.rb
-        end.to change(StoreCredit, :count).by(1)
+        }.to change(StoreCredit, :count).by(1)
         credit = Spree::StoreCredit.last
         credit.user.should == sender
       end
 
       it "should not create multiple store credits on multiple order update" do
         create(:line_item, :order => order)
-        payment = create(:payment, :order => order, :amount => 20)
+        payment = create(:payment, :order => order, :amount => 60)
         expect do
           order.reload
           payment.complete!
@@ -43,18 +43,16 @@ module Spree
       it "should not create multiple store credits on multiple recipient orders" do
         create(:line_item, :order => order)
         create(:line_item, :order => order2)
-        payment = create(:payment, :order => order, :amount => 20)
-        payment2 = create(:payment, :order => order2, :amount => 20)
-        expect do
-          order.reload
-          order2.reload
+        payment = create(:payment, :order => order, :amount => 60)
+        payment2 = create(:payment, :order => order2, :amount => 60)
+        expect {
           payment.complete!
           payment2.complete!
           2.times do
-            order.update!
-            order2.update!
+            order.reload.update!
+            order2.reload.update!
           end
-        end.to change(StoreCredit, :count).by(1)
+        }.to change(StoreCredit, :count).by(1)
         credit = Spree::StoreCredit.last
         credit.user.should == sender
       end

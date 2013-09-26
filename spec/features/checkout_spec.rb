@@ -1,22 +1,21 @@
 require 'spec_helper'
 
 feature 'affiliate store credit feature' do
-
+  let!(:country) { create(:country, :states_required => true) }
+  let!(:state) { create(:state, :country => country) }
+  let!(:shipping_method) { create(:shipping_method) }
+  let!(:stock_location) { create(:stock_location) }
+  let!(:mug) { create(:product, :name => "RoR Mug") }
+  let!(:payment_method) { create(:payment_method) }
+  let!(:zone) { create(:zone) }
+  let!(:product) { create(:product, :name => "RoR Mug", :price => 49.99) }
   let(:sender) { create(:admin_user) }
 
   let!(:address) { create(:address, :state => Spree::State.first) }
 
-  background do
-    PAYMENT_STATES = Spree::Payment.state_machine.states.keys unless defined? PAYMENT_STATES
-    SHIPMENT_STATES = Spree::Shipment.state_machine.states.keys unless defined? SHIPMENT_STATES
-    ORDER_STATES = Spree::Order.state_machine.states.keys unless defined? ORDER_STATES
-    create(:shipping_method, :zone => Spree::Zone.find_by_name('North America'))
-    create(:payment_method, :environment => 'test')
-    @product = create(:product, :name => "RoR Mug", :price => 49.99)
-  end
 
   def add_product_to_cart_and_fill_address
-    visit spree.product_path(@product)
+    visit spree.product_path(product)
 
     click_button "Add To Cart"
     click_button "Checkout"
