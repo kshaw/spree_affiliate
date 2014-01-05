@@ -3,7 +3,7 @@ Spree::Core::Engine.routes.draw do
     resource :affiliate_settings
   end
 
-  resources :affiliates, :only => [:show, :index, :new]
+  resources :affiliates, only: [:show, :index, :new]
 
-  match 'AF/:ref_id' => 'af#show', :module => :spree, :as => :af
+  match 'AF/:ref_id' => 'af#show', module: :spree, as: :af, via: [:get, :post]
 end
