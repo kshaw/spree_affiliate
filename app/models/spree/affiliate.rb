@@ -5,8 +5,6 @@ class Spree::Affiliate < ActiveRecord::Base
 
   validates_presence_of :user, :partner
 
-  attr_accessible :user_id
-
   def name
     I18n.t(:affiliate_program)
   end
